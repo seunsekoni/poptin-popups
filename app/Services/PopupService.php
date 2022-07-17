@@ -60,7 +60,7 @@ class PopupService implements ModelInterface
      *
      * @param  $popup
      * @param  $request
-     * @return Popup
+     * @return Popup $popup
      */
     public function update($popup, $request): Popup
     {
