@@ -78,8 +78,8 @@ class DomainController extends Controller
      */
     public function show($domain)
     {
-        $this->authorize('view', $domain);
         $domain = $this->domainService->getById($domain)->load('popups');
+        $this->authorize('view', $domain);
 
         return view('popups.index', compact('domain'));
     }
