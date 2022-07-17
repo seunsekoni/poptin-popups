@@ -20,12 +20,16 @@ class DomainService implements ModelInterface
     /**
      * Get the domain by id.
      *
-     * @param  int $id
+     * @param  $domain
      * @return Domain
      */
-    public function getById(int $id): Domain
+    public function getById($domain): Domain
     {
-        return Domain::findOrFail($id);
+        $domain =  Domain::where('id', $domain)
+            ->orWhere('reference', $domain)
+            ->firstOrFail();
+
+        return $domain;
     }
 
     /**

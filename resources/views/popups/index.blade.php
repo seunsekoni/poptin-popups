@@ -26,6 +26,9 @@
                     Status
                 </th>
                 <th scope="col" class="py-3 px-6">
+                    Snippet
+                </th>
+                <th scope="col" class="py-3 px-6">
                     Date Added
                 </th>
                 <th scope="col" class="py-3 px-6">
@@ -47,6 +50,9 @@
                     </td>
                     <td class="py-4 px-6">
                         {{ $popup->status }}
+                    </td>
+                    <td class="py-4 px-6">
+                        {{ $popup->snippet_link }}
                     </td>
                     <td class="py-4 px-6">
                         {{ $popup->created_at->format('Y-m-d') }}

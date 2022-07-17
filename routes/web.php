@@ -16,28 +16,30 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::redirect('/', 'login');
+Route::get('/domains/{domain}', [DomainController::class, 'show'])->name('domains.show');
 
-Route::prefix('/domains')->group(function () {
-    Route::get('/', [DomainController::class, 'index'])->name('domains.index');
-    Route::get('/create', [DomainController::class, 'create'])->name('domains.create');
-    Route::post('/store', [DomainController::class, 'store'])->name('domains.store');
+Route::middleware('auth')->group(function () {
+    Route::prefix('/domains')->group(function () {
+        Route::get('/', [DomainController::class, 'index'])->name('domains.index');
+        Route::get('/create', [DomainController::class, 'create'])->name('domains.create');
+        Route::post('/store', [DomainController::class, 'store'])->name('domains.store');
 
-    Route::prefix('/{domain}')->group(function () {
-        Route::get('/', [DomainController::class, 'show'])->name('domains.show');
-        Route::get('/edit', [DomainController::class, 'edit'])->name('domains.edit');
-        Route::put('/update', [DomainController::class, 'update'])->name('domains.update');
-        Route::delete('/destroy', [DomainController::class, 'destroy'])->name('domains.destroy');
+        Route::prefix('/{domain}')->group(function () {
+            Route::get('/edit', [DomainController::class, 'edit'])->name('domains.edit');
+            Route::put('/update', [DomainController::class, 'update'])->name('domains.update');
+            Route::delete('/destroy', [DomainController::class, 'destroy'])->name('domains.destroy');
 
-        Route::prefix('/popups')->group(function () {
-            Route::get('/', [PopupController::class, 'index'])->name('popups.index');
-            Route::get('/create', [PopupController::class, 'create'])->name('popups.create');
-            Route::post('/store', [PopupController::class, 'store'])->name('popups.store');
-
-            Route::prefix('/{popup}')->group(function () {
-                Route::get('/', [PopupController::class, 'show'])->name('popups.show');
-                Route::get('/edit', [PopupController::class, 'edit'])->name('popups.edit');
-                Route::put('/update', [PopupController::class, 'update'])->name('popups.update');
-                Route::delete('/destroy', [PopupController::class, 'destroy'])->name('popups.destroy');
+            Route::prefix('/popups')->group(function () {
+                Route::get('/', [PopupController::class, 'index'])->name('popups.index');
+                Route::get('/create', [PopupController::class, 'create'])->name('popups.create');
+                Route::post('/store', [PopupController::class, 'store'])->name('popups.store');
+    
+                Route::prefix('/{popup}')->group(function () {
+                    Route::get('/', [PopupController::class, 'show'])->name('popups.show');
+                    Route::get('/edit', [PopupController::class, 'edit'])->name('popups.edit');
+                    Route::put('/update', [PopupController::class, 'update'])->name('popups.update');
+                    Route::delete('/destroy', [PopupController::class, 'destroy'])->name('popups.destroy');
+                });
             });
         });
     });

@@ -18,4 +18,15 @@ class Popup extends Model
     {
         return $this->belongsTo(Domain::class);
     }
+
+    /**
+     * Get the popup's code snippet.
+     *
+     * @return string
+     */
+    public function getSnippetLinkAttribute()
+    {
+        $fullUrl = request()->getSchemeAndHttpHost();
+        return "{$fullUrl}/task.js?id={$this->domain->reference}";
+    }
 }

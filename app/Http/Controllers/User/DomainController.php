@@ -73,14 +73,19 @@ class DomainController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Domain  $domain
+     * @param  int $domain
      * @return \Illuminate\Http\Response
      */
-    public function show(Domain $domain)
+    public function show($domain)
     {
-        return view('popups.index', compact([
-            'domain' => $domain,
-        ]));
+        $domain = $this->domainService->getById($domain);
+
+        if (request()->ajax()) {
+            return response()->json($domain);
+        }
+        $popups = $domain->popups()->orderBy('created_at', 'desc')->get();
+
+        return view('popups.index', compact('domain', 'popups'));
     }
 
     /**

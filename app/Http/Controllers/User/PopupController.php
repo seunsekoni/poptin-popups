@@ -10,6 +10,7 @@ use App\Models\Domain;
 use App\Models\Popup;
 use App\Services\Popupservice;
 use Illuminate\Http\Request;
+use Illuminate\Support\HtmlString;
 
 class PopupController extends Controller
 {
@@ -69,9 +70,14 @@ class PopupController extends Controller
      */
     public function store(StorePopupRequest $request, Domain $domain)
     {
-        $this->popupService->store($request);
+        $popup = $this->popupService->store($request)->first();
+        $fullUrl = $request->getSchemeAndHttpHost();
 
-        return redirect()->back()->with('status', 'Popup created successfully');
+        $notes = new HtmlString("Kindly add this this code snippet to your page: 
+            <b>{$popup->snippet_link}</b>
+        ");
+
+        return redirect()->back()->with('status', "Popup created successfully. {$notes}");
     }
 
     /**
@@ -110,9 +116,18 @@ class PopupController extends Controller
      */
     public function update(Request $request, Domain $domain, Popup $popup)
     {
-        $this->popupService->update($popup, $request);
+        $popup = $this->popupService->update($popup, $request);
+        $fullUrl = $request->getSchemeAndHttpHost();
 
-        return redirect()->back()->with('status', 'Popup updated successfully');
+        $notes = new HtmlString("Kindly add this this code snippet to your page: 
+            <pre>
+                <code>
+                    {$fullUrl}/task.js?id={$popup->domain->reference}
+                </code>
+            </pre>
+        ");
+
+        return redirect()->back()->with('status', "Popup updated successfully. {$notes}");
     }
 
     /**
