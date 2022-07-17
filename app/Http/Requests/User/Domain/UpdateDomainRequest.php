@@ -24,11 +24,11 @@ class UpdateDomainRequest extends FormRequest
      */
     public function rules()
     {
-        $regex = '/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
+        // $regex = '/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
         return [
             'top_level' => [
                 'required',
-                'regex:' . $regex,
+                // 'regex:' . $regex, // comment out this validation so test domains with port can be added
                 Rule::unique('domains')->ignoreModel($this->domain),
             ],
             'description' => 'nullable',

@@ -23,9 +23,9 @@ class StoreDomainRequest extends FormRequest
      */
     public function rules()
     {
-        $regex = '/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
+        // $regex = '/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
         return [
-            'top_level' => 'required|unique:domains,top_level|regex:' . $regex,
+            'top_level' => 'required|unique:domains,top_level',
             'description' => 'nullable',
         ];
     }
