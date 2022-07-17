@@ -97,14 +97,12 @@ class DomainController extends Controller
     {
         $domain = $this->domainService->getById($domain)->load('popups');
 
-        if (request()->isJson()) {
-            return response()
-                ->json([
-                    'data' => $domain->load('popups'),
-                    'message' => 'Domain loaded successfully.',
-                    'status' => true,
-                ]);
-        }
+        return response()
+            ->json([
+                'data' => $domain->load('popups'),
+                'message' => 'Domain loaded successfully.',
+                'status' => true,
+            ]);
     }
 
     /**
