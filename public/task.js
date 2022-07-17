@@ -28,7 +28,7 @@ async function getDomainId(){
  */
 async function fetchDomain(){
     let domainId = await getDomainId();
-    let popupsUrl = `http://localhost:8000/api/domains/${domainId}`;
+    let popupsUrl = `https://intense-earth-73718.herokuapp.com/api/domains/${domainId}`;
     await fetch(popupsUrl, {
         method: 'GET',
         headers: {
