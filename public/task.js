@@ -67,7 +67,8 @@ async function processAlerts(response) {
     let domain = url.split('/')[2];
 
     if (domain !== parseRegisteredDomain) {
-        alertText('Domain is not registered');
+        alertText('Domain is not registered. Process aborted!!!');
+        return;
     }
     return popups.forEach(popup => {
         let strippedPageUrl = stripUrl(popup.page);
