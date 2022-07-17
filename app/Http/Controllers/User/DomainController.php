@@ -78,14 +78,33 @@ class DomainController extends Controller
      */
     public function show($domain)
     {
-        $domain = $this->domainService->getById($domain);
+        $this->authorize('view', $domain);
+        $domain = $this->domainService->getById($domain)->load('popups');
 
-        if (request()->ajax()) {
-            return response()->json($domain);
+        return view('popups.index', compact('domain'));
+    }
+
+    /**
+     * Show specied resource to public.
+     */
+    /**
+     * Display the specified resource.
+     *
+     * @param  int $domain
+     * @return \Illuminate\Http\Response
+     */
+    public function showPublic($domain)
+    {
+        $domain = $this->domainService->getById($domain)->load('popups');
+
+        if (request()->isJson()) {
+            return response()
+                ->json([
+                    'data' => $domain->load('popups'),
+                    'message' => 'Domain loaded successfully.',
+                    'status' => true,
+                ]);
         }
-        $popups = $domain->popups()->orderBy('created_at', 'desc')->get();
-
-        return view('popups.index', compact('domain', 'popups'));
     }
 
     /**
@@ -108,6 +127,7 @@ class DomainController extends Controller
      */
     public function update(UpdateDomainRequest $request, Domain $domain)
     {
+        $this->authorize('update', $domain);
         $this->domainService->update($request, $domain);
 
         return redirect()->back()
@@ -122,6 +142,7 @@ class DomainController extends Controller
      */
     public function destroy(Domain $domain)
     {
+        $this->authorize('delete', $domain);
         $this->domainService->delete($domain);
 
         return redirect()->route('domains.index')

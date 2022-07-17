@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\User;
 
 use App\Enums\RuleEnum;
-use App\Enums\StatusEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\Popup\StorePopupRequest;
+use App\Http\Requests\User\Popup\UpdatePopupRequest;
 use App\Models\Domain;
 use App\Models\Popup;
 use App\Services\Popupservice;
@@ -38,8 +38,12 @@ class PopupController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        if ($request->ajax()) {
-            return response()->json($popups);
+        if ($request->isJson()) {
+            return response()->json([
+                'data' => $popups,
+                'message' => 'Popups fetched successfully',
+                'status' => true,
+            ]);
         }
 
         return view('popups.index', compact([
@@ -71,11 +75,9 @@ class PopupController extends Controller
     public function store(StorePopupRequest $request, Domain $domain)
     {
         $popup = $this->popupService->store($request)->first();
-        $fullUrl = $request->getSchemeAndHttpHost();
 
-        $notes = new HtmlString("Kindly add this this code snippet to your page: 
-            <b>{$popup->snippet_link}</b>
-        ");
+        $notes = "Kindly add this this code snippet to your page: 
+            <b>{$popup->snippet_link}";
 
         return redirect()->back()->with('status', "Popup created successfully. {$notes}");
     }
@@ -109,23 +111,19 @@ class PopupController extends Controller
     /**
      * Update the specified resource in storage.
      *
+     * @param  UpdatePopupRequest  $request
      * @param Domain $domain
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Popup  $popup
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Domain $domain, Popup $popup)
+    public function update(UpdatePopupRequest $request, Domain $domain, Popup $popup)
     {
+        $this->authorize('update', $popup);
         $popup = $this->popupService->update($popup, $request);
         $fullUrl = $request->getSchemeAndHttpHost();
 
-        $notes = new HtmlString("Kindly add this this code snippet to your page: 
-            <pre>
-                <code>
-                    {$fullUrl}/task.js?id={$popup->domain->reference}
-                </code>
-            </pre>
-        ");
+        $notes = "Kindly add this this code snippet to your page: 
+            {$fullUrl}/task.js?id={$popup->domain?->reference}";
 
         return redirect()->back()->with('status', "Popup updated successfully. {$notes}");
     }
@@ -139,6 +137,7 @@ class PopupController extends Controller
      */
     public function destroy(Domain $domain, Popup $popup)
     {
+        $this->authorize('delete', $popup);
         $this->popupService->delete($popup);
 
         return redirect()->route('popups.index')->with('status', 'Popup deleted successfully');
