@@ -2,7 +2,13 @@
 
 @section('content')
 
-<!-- Validation Errors -->
+<div class="grid w-full"> 
+  <div class="text-right" >
+      <button type="button" class="mt-4 text-white bg-amber-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-4 mb-2">
+        <a href="{{ route('domains.index') }}">View Domains</a>
+    </button>
+  </div>
+</div>
 
 <form class="ml-5 mt-10" method="POST" action="{{ route('domains.store') }}">
     @csrf
