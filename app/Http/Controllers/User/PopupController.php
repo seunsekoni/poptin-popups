@@ -10,7 +10,6 @@ use App\Models\Domain;
 use App\Models\Popup;
 use App\Services\PopupService;
 use Illuminate\Http\Request;
-use Illuminate\Support\HtmlString;
 
 class PopupController extends Controller
 {
@@ -77,7 +76,7 @@ class PopupController extends Controller
         $popup = $this->popupService->store($request)->first();
 
         $notes = "Kindly add this this code snippet to your page: 
-            <b>{$popup->snippet_link}";
+            {$popup->snippet_link}";
 
         return redirect()->back()->with('status', "Popup created successfully. {$notes}");
     }
