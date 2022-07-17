@@ -8,7 +8,7 @@ use App\Http\Requests\User\Popup\StorePopupRequest;
 use App\Http\Requests\User\Popup\UpdatePopupRequest;
 use App\Models\Domain;
 use App\Models\Popup;
-use App\Services\Popupservice;
+use App\Services\PopupService;
 use Illuminate\Http\Request;
 use Illuminate\Support\HtmlString;
 
