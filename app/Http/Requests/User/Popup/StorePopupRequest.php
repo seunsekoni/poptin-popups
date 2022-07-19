@@ -25,13 +25,14 @@ class StorePopupRequest extends FormRequest
     public function rules()
     {
         return [
+            'text' => [
+                Rule::unique('popups', 'text')->where('domain_id', $this->domain->id)
+            ],
             'form' => 'required|array',
             'form.*.page' => [
                 'string',
-                'distinct',
-                Rule::unique('popups', 'page')->where('domain_id', $this->domain->id)
+                // 'distinct',
             ],
-            'form.*.text' => 'string',
             'form.*.rule' => 'string',
         ];
     }
