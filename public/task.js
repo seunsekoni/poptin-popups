@@ -44,15 +44,6 @@ async function fetchDomain(){
 }
 
 /**
- * 
- * @param {string} text
- * @returns function
- */
-function alertText(text){
-    alert(text);
-}
-
-/**
  * Process the alerts from the API.
  * 
  * @param {object} response 
@@ -70,22 +61,30 @@ async function processAlerts(response) {
         alertText('Domain is not registered. Process aborted!!!');
         return;
     }
-    return popups.forEach(popup => {
-        let strippedPageUrl = stripUrl(popup.page);
-        if (popup.status && popup.rule === 'pages contain' && pageContains(strippedPageUrl)) {
-            alertText(popup.text);
-        }
-
-        if (popup.status && popup.rule === 'pages start with' && pageStartsWith(strippedPageUrl)) {
-            alertText(popup.text);
-        }
-
-        if (popup.status && popup.rule === 'pages end with' && pageEndsWith(strippedPageUrl)) {
-            alertText(popup.text);
-        }
-
-        if (popup.status && popup.rule === 'specific page' && isSpecificPage(strippedPageUrl)) {
-            alertText(popup.text);
+    let flag = false;
+    let strippedDomain = stripUrl(domain);
+    popups.map(popup => {
+        popup.rules.map(rule => {
+            if (rule.status && pageContains(rule.page)) {
+                flag = true
+            } if (rule.status && isSpecificPage(`${strippedDomain}/${rule.page}`)) {
+                flag = true;
+            }  if (rule.status && pageEndsWith(rule.page)) {
+                flag =  true;
+            }  if (rule.status && pageStartsWith(rule.page)) {
+                flag = true
+            }  if (!rule.status && pageContains(rule.page)) {
+                flag = false
+            }  if (!rule.status && isSpecificPage(`${strippedDomain}/${rule.page}`)) {
+                flag = false;
+            }  if (!rule.status && pageEndsWith(rule.page)) {
+                flag =  false;
+            }  if (!rule.status && pageStartsWith(rule.page)) {
+                flag = false;
+            } 
+        });
+        if (flag) {
+            alert(popup.text);
         }
     });
 }
@@ -139,11 +138,3 @@ function pageEndsWith(text) {
 function stripUrl(url) {
     return url.replace(/^(https?:|http?:)\/\//, '');
 }
-
-
-
-
-
-
-
-
