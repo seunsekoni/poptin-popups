@@ -36,8 +36,7 @@ class UpdatePopupRequest extends FormRequest
                 'string',
                 // 'distinct',
             ],
-            'form.*.text' => 'string',
-            'form.*.rule' => 'string',
+            'form.*.rule' => 'required|string',
         ];
     }
 

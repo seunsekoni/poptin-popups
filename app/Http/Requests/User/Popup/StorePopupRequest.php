@@ -33,7 +33,7 @@ class StorePopupRequest extends FormRequest
                 'string',
                 // 'distinct',
             ],
-            'form.*.rule' => 'string',
+            'form.*.rule' => 'required|string',
         ];
     }
 }
