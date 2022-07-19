@@ -83,4 +83,15 @@ class PopupService implements ModelInterface
     {
         $popup->delete();
     }
+
+    /**
+     * Delete a popup rule.
+     *
+     * @param  $popupRule
+     * @return void
+     */
+    public function deleteRule($popupRule)
+    {
+        $popupRule->delete();
+    }
 }

@@ -39,6 +39,8 @@ Route::middleware('auth')->group(function () {
                     Route::get('/edit', [PopupController::class, 'edit'])->name('popups.edit');
                     Route::put('/update', [PopupController::class, 'update'])->name('popups.update');
                     Route::delete('/destroy', [PopupController::class, 'destroy'])->name('popups.destroy');
+                    Route::delete('/{popupRule}/delete-rule', [PopupController::class, 'deleteRule'])
+                        ->name('popups.delete-rule');
                 });
             });
         });

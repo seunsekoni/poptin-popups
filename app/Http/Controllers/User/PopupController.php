@@ -8,6 +8,7 @@ use App\Http\Requests\User\Popup\StorePopupRequest;
 use App\Http\Requests\User\Popup\UpdatePopupRequest;
 use App\Models\Domain;
 use App\Models\Popup;
+use App\Models\PopupRule;
 use App\Services\PopupService;
 use Illuminate\Http\Request;
 
@@ -76,7 +77,7 @@ class PopupController extends Controller
         $popup = $this->popupService->store($request)->first();
 
         $notes = "Kindly add this this code snippet to your page: 
-            {$popup->snippet_link}";
+                <script src='{$popup->snippet_link}'></script>";
 
         return redirect()->back()->with('status', "Popup created successfully. {$notes}");
     }
@@ -119,12 +120,12 @@ class PopupController extends Controller
     {
         $this->authorize('update', $popup);
         $popup = $this->popupService->update($popup, $request);
-        $fullUrl = $request->getSchemeAndHttpHost();
 
         $notes = "Kindly add this this code snippet to your page: 
-            {$fullUrl}/task.js?id={$popup->domain?->reference}";
+            <script src='{$popup->snippet_link}'></script>";
 
-        return redirect()->back()->with('status', "Popup updated successfully. {$notes}");
+        return redirect()->route('popups.index', ['domain' => $domain])
+            ->with('status', "Popup updated successfully. {$notes}");
     }
 
     /**
@@ -140,5 +141,21 @@ class PopupController extends Controller
         $this->popupService->delete($popup);
 
         return redirect()->route('popups.index')->with('status', 'Popup deleted successfully');
+    }
+
+    /**
+     * Delete a popup rule.
+     *
+     * @param Domain $domain
+     * @param  \App\Models\Popup  $popup
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteRule(Domain $domain, Popup $popup, PopupRule $popupRule)
+    {
+        $this->authorize('delete', $popup);
+        $this->popupService->deleteRule($popupRule);
+
+        return redirect()->route('popups.edit', ['domain' => $domain, 'popup' => $popup, 'popupRule' => $popupRule])
+            ->with('status', 'Popup rule deleted successfully');
     }
 }
