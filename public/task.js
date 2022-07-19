@@ -52,40 +52,41 @@ async function fetchDomain(){
 async function processAlerts(response) {
     const { popups } = response.data;
     const { data } = response;
-    const parseRegisteredDomain = data.top_level.replace(/^(www|https:)\./, '');
+    const parseRegisteredDomain = stripUrl(data.top_level)
 
     let url = window.location.href;
     let domain = url.split('/')[2];
 
     if (domain !== parseRegisteredDomain) {
-        alertText('Domain is not registered. Process aborted!!!');
+        alert('Domain is not registered. Process aborted!!!');
         return;
     }
     let flag = false;
     let strippedDomain = stripUrl(domain);
+    let popupsToShow = [];
     popups.map(popup => {
-        popup.rules.map(rule => {
-            if (rule.status && pageContains(rule.page)) {
-                flag = true
-            } if (rule.status && isSpecificPage(`${strippedDomain}/${rule.page}`)) {
-                flag = true;
-            }  if (rule.status && pageEndsWith(rule.page)) {
-                flag =  true;
-            }  if (rule.status && pageStartsWith(rule.page)) {
-                flag = true
-            }  if (!rule.status && pageContains(rule.page)) {
-                flag = false
-            }  if (!rule.status && isSpecificPage(`${strippedDomain}/${rule.page}`)) {
-                flag = false;
-            }  if (!rule.status && pageEndsWith(rule.page)) {
-                flag =  false;
-            }  if (!rule.status && pageStartsWith(rule.page)) {
-                flag = false;
-            } 
+        let text = popup.text;
+        popup.rules.map(setting => {
+            if (setting.status) {
+                if (setting.rule === 'pages end with' && pageEndsWith(setting.page)) {
+                    if (!popupsToShow.includes(text)) popupsToShow.push(text)
+                } else if (setting.rule === 'pages contain' && pageContains(setting.page)) {
+                    if (!popupsToShow.includes(text)) popupsToShow.push(text)
+                }
+                else if (setting.rule === 'pages start with' && pageStartsWith(setting.page)) {
+                    if (!popupsToShow.includes(text)) popupsToShow.push(text)
+                }
+                else if (setting.rule === 'specific page' && isSpecificPage(`${strippedDomain}/${setting.page}`)) {
+                    if (!popupsToShow.includes(text)) popupsToShow.push(text)
+                } else {
+                    return;
+                }
+            }
         });
-        if (flag) {
-            alert(popup.text);
-        }
+    });
+
+    popupsToShow.forEach(popup => {
+        alert(popup);
     });
 }
 
@@ -123,7 +124,7 @@ function pageStartsWith(text) {
  * Handle the logic for checking if the page url ends with the text.
  * 
  * @param {string} text 
- * @returns biilean
+ * @returns boolean
  */
 function pageEndsWith(text) {
     return stripUrl(window.location.href).endsWith(text);

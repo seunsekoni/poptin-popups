@@ -155,6 +155,12 @@ class PopupController extends Controller
         $this->authorize('delete', $popup);
         $this->popupService->deleteRule($popupRule);
 
+        return response()->json([
+            'data' => $popupRule,
+            'message' => 'Popup rule deleted successfully',
+            'status' => true,
+        ]);
+
         return redirect()->route('popups.edit', ['domain' => $domain, 'popup' => $popup, 'popupRule' => $popupRule])
             ->with('status', 'Popup rule deleted successfully');
     }
