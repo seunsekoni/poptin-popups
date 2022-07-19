@@ -1,6 +1,6 @@
 <script>
     $(document).ready(function() {
-        let i = 0;
+        let i = "{!! $i ?? 0 !!}" ||  0;
         document.getElementById("addRule").addEventListener("click", function() {
             i++;
             let html = `
@@ -13,19 +13,11 @@
                 </div>
                 <div class="col-span-1 pr-4">
                     <select id="rules" name="form[${i}][rule]" class="block w-full border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:text-blue-400 focus:ring-blue-500">
-                        <option selected>Select Rule</option>
+                        <option disabled selected>Select Rule</option>
                             @foreach($rules as $key => $value)
                                 <option value="{{ $key }}">{{ $value }}</option>
                             @endforeach
                     </select>
-                </div>
-                <div class="col-span-2">
-                    <div>
-                        <div class="flex">
-                            <label for="text" class="mt-2 w-4/12 pr-3 text-right text-sm font-medium text-gray-900">Alert Input</label>
-                            <input type="text" name="form[${i}][text]" class="block w-6/12 border border-gray-300 bg-gray-50 p-2.5 text-left text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500" placeholder="" />
-                        </div>
-                    </div>
                 </div>
                 <div class="col-span-3">
                     <div>
