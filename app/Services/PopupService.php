@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Interfaces\ModelInterface;
 use App\Models\Popup;
+use App\Models\PopupRule;
+use Illuminate\Support\Facades\DB;
 
 class PopupService implements ModelInterface
 {
@@ -36,21 +38,28 @@ class PopupService implements ModelInterface
      */
     public function store($request)
     {
+        DB::beginTransaction();
         $domain = $request->domain;
         $data = [];
+        $popup = new Popup();
+        $popup->domain()->associate($domain);
+        $popup->text = $request->text;
+        $popup->save();
+
         if ($forms = $request['form']) {
             foreach ($forms as $req) {
-                $popup = new Popup();
-                $popup->page = $req['page'];
-                $popup->text = $req['text'];
-                $popup->rule = $req['rule'];
-                $popup->status = $req['status'];
+                $popupRule = new PopupRule();
+                $popupRule->popup_id = $popup->id;
+                $popupRule->page = $req['page'];
+                $popupRule->rule = $req['rule'];
+                $popupRule->status = $req['status'];
 
-                $data[] = $popup;
+                $data[] = $popupRule;
             }
             // Save all data in DB at once
-            $domain->popups()->saveMany($data);
+            $popup->rules()->saveMany($data);
         }
+        DB::commit();
 
         return $domain->popups;
     }
@@ -64,11 +73,23 @@ class PopupService implements ModelInterface
      */
     public function update($popup, $request): Popup
     {
-        $popup->page = $request->page;
-        $popup->text = $request->text;
-        $popup->rule = $request->rule;
-        $popup->status = $request->status;
-        $popup->update();
+        $forms = $request['form'];
+        foreach ($forms as $req) {
+            if (array_key_exists('id', $req)) {
+                $popupRule = PopupRule::findOrFail($req['id']);
+                $popupRule->page = $req['page'];
+                $popupRule->rule = $req['rule'];
+                $popupRule->status = $req['status'];
+                $popupRule->save();
+            } else {
+                $popupRule = new PopupRule();
+                $popupRule->popup_id = $popup->id;
+                $popupRule->page = $req['page'];
+                $popupRule->rule = $req['rule'];
+                $popupRule->status = $req['status'];
+                $popupRule->save();
+            }
+        }
 
         return $popup;
     }

@@ -25,14 +25,19 @@ class UpdatePopupRequest extends FormRequest
     public function rules()
     {
         return [
-            'page' => [
+            'text' => [
+                Rule::unique('popups', 'text')
+                    ->where('domain_id', $this->domain->id)
+                    ->ignoreModel($this->popup)
+            ],
+            'form' => 'array',
+            'form.*.page' => [
                 'required',
                 'string',
-                'distinct',
-                Rule::unique('popups', 'page')->where('domain_id', $this->domain->id)->ignoreModel($this->popup),
+                // 'distinct',
             ],
-            'text' => 'string|required',
-            'rule' => 'string|required',
+            'form.*.text' => 'string',
+            'form.*.rule' => 'string',
         ];
     }
 

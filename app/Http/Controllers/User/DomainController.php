@@ -95,11 +95,11 @@ class DomainController extends Controller
      */
     public function showPublic($domain)
     {
-        $domain = $this->domainService->getById($domain)->load('popups');
+        $domain = $this->domainService->getById($domain)->load('popups.rules');
 
         return response()
             ->json([
-                'data' => $domain->load('popups'),
+                'data' => $domain,
                 'message' => 'Domain loaded successfully.',
                 'status' => true,
             ]);

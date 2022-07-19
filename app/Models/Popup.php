@@ -20,6 +20,16 @@ class Popup extends Model
     }
 
     /**
+     * Get the the rules for the popup.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function rules()
+    {
+        return $this->hasMany(PopupRule::class);
+    }
+
+    /**
      * Get the popup's code snippet.
      *
      * @return string
