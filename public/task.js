@@ -15,7 +15,7 @@ async function getSoureUrl() {
  * 
  * @returns string
  */
-async function getDomainId(){
+async function getDomainId() {
     let url = new URL(await getSoureUrl());
     let domainId = url.searchParams.get('id')
     return domainId;
@@ -26,21 +26,22 @@ async function getDomainId(){
  *
  * @returns Promise
  */
-async function fetchDomain(){
+async function fetchDomain() {
     let domainId = await getDomainId();
-    let popupsUrl = `https://intense-earth-73718.herokuapp.com/api/domains/${domainId}`;
+    // let popupsUrl = `https://intense-earth-73718.herokuapp.com/api/domains/${domainId}`;
+    let popupsUrl = `http://localhost:8000/api/domains/${domainId}`;
     await fetch(popupsUrl, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
         }
-        
+
     })
-    .then(response => response.json())
-    .then(data => {
-        processAlerts(data);
-    })
+        .then(response => response.json())
+        .then(data => {
+            processAlerts(data);
+        })
 }
 
 /**
@@ -64,9 +65,10 @@ async function processAlerts(response) {
     let flag = false;
     let strippedDomain = stripUrl(domain);
     let popupsToShow = [];
-    popups.map(popup => {
+    popups.forEach(popup => {
         let text = popup.text;
-        popup.rules.map(setting => {
+        popup.rules.forEach(setting => {
+            console.log(setting)
             if (setting.status) {
                 if (setting.rule === 'pages end with' && pageEndsWith(setting.page)) {
                     if (!popupsToShow.includes(text)) popupsToShow.push(text)
@@ -117,7 +119,7 @@ function isSpecificPage(url) {
  * @returns boolean
  */
 function pageStartsWith(text) {
-    return stripUrl(window.location.href).startsWith(text);
+    return stripUrl(window.location.href).split('/')[1] === text;
 }
 
 /**
@@ -127,7 +129,7 @@ function pageStartsWith(text) {
  * @returns boolean
  */
 function pageEndsWith(text) {
-    return stripUrl(window.location.href).endsWith(text);
+    return location.pathname.match(/[^/]*(?=\/*$)/)[0] === text;
 }
 
 /**
