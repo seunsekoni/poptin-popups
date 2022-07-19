@@ -13,16 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('popups', function (Blueprint $table) {
+        Schema::create('popup_rules', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('domain_id')->constrained();
-            $table->string('text');
+            $table->foreignId('popup_id')->constrained();
+            $table->string('page')->nullable();
+            $table->string('rule');
+            $table->string('status');
             $table->timestamps();
-
-            $table->unique([
-                'domain_id',
-                'text',
-            ]);
         });
     }
 
@@ -33,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('popups');
+        Schema::dropIfExists('popup_rules');
     }
 };

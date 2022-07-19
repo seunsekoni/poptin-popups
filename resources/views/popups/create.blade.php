@@ -14,6 +14,14 @@
     <x-auth-validation-errors class="mb-4" :errors="$errors" />
 	@csrf
   	<div id="appendNewRows" class="">
+		<div class="col-span-2">
+			<div class="flex">
+				<div class="w-full ml-4">
+					<label for="text" class="mt-2 w-4/12 pr-3 text-right text-sm font-medium text-gray-900">Alert Text</label>
+					<input name="text" type="text" class="block w-6/12 border border-gray-300 bg-gray-50 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500" placeholder="" />
+				</div>
+			</div>
+		</div>
 		<div class="ruleRow mx-4 my-6 grid w-full grid-cols-7 bg-gray-100">
 			<div class="col-span-1 pr-4">
 				<select id="status" name="form[0][status]" class="block w-full border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:text-blue-400 focus:ring-blue-500">
@@ -23,19 +31,11 @@
 			</div>
 			<div class="col-span-1 pr-4">
 				<select id="rules" name="form[0][rule]" class="block w-full border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:text-blue-400 focus:ring-blue-500">
-					<option selected>Select Rule</option>
+					<option disabled selected>Select Rule</option>
 						@foreach($rules as $key => $value)
 							<option value="{{ $key }}">{{ $value }}</option>
 						@endforeach
 				</select>
-			</div>
-			<div class="col-span-2">
-				<div>
-					<div class="flex">
-						<label for="text" class="mt-2 w-4/12 pr-3 text-right text-sm font-medium text-gray-900">Alert Text</label>
-						<input name="form[0][text]" type="text" class="block w-6/12 border border-gray-300 bg-gray-50 p-2.5 text-left text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500" placeholder="" />
-					</div>
-				</div>
 			</div>
 			<div class="col-span-3">
 				<div>

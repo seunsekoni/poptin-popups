@@ -16,39 +16,68 @@
     @method('PUT')
 	@csrf
   	<div id="appendNewRows" class="">
-		<div class="ruleRow mx-4 my-6 grid w-full grid-cols-7 bg-gray-100">
-			<div class="col-span-1 pr-4">
-				<select id="status" name="status" class="block w-full border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:text-blue-400 focus:ring-blue-500">
-					<option {{ $popup->status ? 'selected' : '' }} value="1">Show on</option>
-					<option {{ !$popup->status ? 'selected' : '' }} value="0">Don't Show</option>
-				</select>
-			</div>
-			<div class="col-span-1 pr-4">
-				<select id="rules" name="rule" class="block w-full border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:text-blue-400 focus:ring-blue-500">
-						@foreach($rules as $key => $value)
-							<option {{ $popup->rule == $key ? 'selected': '' }} value="{{ $key }}">{{ $value }}</option>
-						@endforeach
-				</select>
-			</div>
-			<div class="col-span-2">
-				<div>
-					<div class="flex">
-						<label for="text" class="mt-2 w-4/12 pr-3 text-right text-sm font-medium text-gray-900">Alert Text</label>
-						<input value="{{ $popup->text }}" name="text" type="text" class="block w-6/12 border border-gray-300 bg-gray-50 p-2.5 text-left text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500" placeholder="" />
-					</div>
-				</div>
-			</div>
-			<div class="col-span-3">
-				<div>
-					<div class="flex">
-						<label for="pages" class="mt-2 w-4/12 pr-3 text-right text-base font-medium text-gray-900">www.{{ $domain->top_level }}/</label>
-						<input id="pages" value="{{ $popup->page }}" name="page" type="text" class="block w-6/12 border border-gray-300 bg-gray-50 p-2.5 text-left text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500" placeholder="" />
-					</div>
+	  	<div class="col-span-2">
+			<div class="flex">
+				<div class="w-full ml-4">
+					<label for="text" class="mt-2 w-4/12 pr-3 text-right text-sm font-medium text-gray-900">Alert Text</label>
+					<input name="text" type="text" value="{{ $popup->text }}" class="block pb-1 w-6/12 border border-gray-300 bg-gray-50 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500" placeholder="" />
 				</div>
 			</div>
 		</div>
+		@php
+			$i = 0;
+		@endphp
+		@forelse($popup->rules as $rule)
+			@php
+				$i++;
+			@endphp
+			<div class="ruleRow mx-4 my-6 grid w-full grid-cols-7 bg-gray-100">
+				<input type="hidden" name="form[{{ $i }}][id]" value="{{ $rule->id }}"/>
+				<div class="col-span-1 pr-4">
+					<select id="status" name="form[{{ $loop->iteration }}][status]" class="block w-full border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:text-blue-400 focus:ring-blue-500">
+						<option {{ $rule->status ? 'selected' : '' }} value="1">Show on</option>
+						<option {{ !$rule->status ? 'selected' : '' }} value="0">Don't Show</option>
+					</select>
+				</div>
+				<div class="col-span-1 pr-4">
+					<select id="rules{{ $i }}" name="form[{{ $loop->iteration }}][rule]" class="block w-full border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:text-blue-400 focus:ring-blue-500">
+							@foreach($rules as $key => $value)
+								<option {{ $rule->rule == $key ? 'selected': '' }} value="{{ $key }}">{{ $value }}</option>
+							@endforeach
+					</select>
+				</div>
+				<div class="col-span-3">
+					<div>
+						<div class="flex">
+							<label for="pages{{ $i }}" class="mt-2 w-4/12 pr-3 text-right text-base font-medium text-gray-900">www.{{ $domain->top_level }}/</label>
+							<input id="pages{{ $i }}" value="{{ $rule->page }}" name="form[{{ $loop->iteration }}][page]" type="text" class="block w-6/12 border border-gray-300 bg-gray-50 p-2.5 text-left text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500" />
+
+							<!-- <div>
+							<form
+								action="{{ route('popups.delete-rule', ['domain' => $domain, 'popup' => $popup, 'popupRule' => $rule]) }}" 
+								method="post" 
+								onsubmit=" return confirm('Are you sure you want to permanently delete this entry?')"
+							>
+								@csrf
+								@method('DELETE')
+								<button type="submit" class="removeRow py-2.0 ml-2 w-full rounded-lg bg-red-700 px-4 text-center text-sm font-medium text-white sm:w-auto">Delete</button>
+                            </form></div> -->
+						</div>
+					</div>
+				</div>
+			</div>
+		@empty
+			No Data
+		@endforelse
   	</div>
+	  <button onclick="event.preventDefault()" id="addRule" class=" ml-5 rounded bg-amber-700 hover:bg-blue-700 py-2 px-4 text-white"> Add Rule</button>
   	<button type="submit" class="ml-4 text-right rounded bg-blue-700 hover:bg-blue-700 py-2 px-4 text-white">Update</button>
 </form>
 
 @endsection
+
+@once
+    @push('scripts')
+        @include('scripts.popup-scripts')
+    @endpush
+@endonce
