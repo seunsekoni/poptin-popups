@@ -29,7 +29,6 @@ async function getDomainId() {
 async function fetchDomain() {
     let domainId = await getDomainId();
     let popupsUrl = `https://intense-earth-73718.herokuapp.com/api/domains/${domainId}`;
-    // let popupsUrl = `http://localhost:8000/api/domains/${domainId}`;
     await fetch(popupsUrl, {
         method: 'GET',
         headers: {
@@ -62,7 +61,7 @@ async function processAlerts(response) {
         alert('Domain is not registered. Process aborted!!!');
         return;
     }
-    let flag = false;
+
     let strippedDomain = stripUrl(domain);
     let popupsToShow = [];
     popups.forEach(popup => {
@@ -79,8 +78,18 @@ async function processAlerts(response) {
                 }
                 else if (setting.rule === 'specific page' && isSpecificPage(`${strippedDomain}/${setting.page}`)) {
                     if (!popupsToShow.includes(text)) popupsToShow.push(text)
-                } else {
-                    return;
+                }
+            } else {
+                if (setting.rule === 'pages end with' && pageEndsWith(setting.page)) {
+                    if (popupsToShow.includes(text)) popupsToShow.pop(text)
+                } else if (setting.rule === 'pages contain' && pageContains(setting.page)) {
+                    if (popupsToShow.includes(text)) popupsToShow.pop(text)
+                }
+                else if (setting.rule === 'pages start with' && pageStartsWith(setting.page)) {
+                    if (popupsToShow.includes(text)) popupsToShow.pop(text)
+                }
+                else if (setting.rule === 'specific page' && isSpecificPage(`${strippedDomain}/${setting.page}`)) {
+                    if (popupsToShow.includes(text)) popupsToShow.pop(text)
                 }
             }
         });
