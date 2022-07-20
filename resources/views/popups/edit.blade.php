@@ -51,7 +51,7 @@
                         <div class="flex">
 							<label for="pages{{ $i }}" class="mt-2 w-4/12 pr-3 text-right text-base font-medium text-gray-900">www.{{ $domain->top_level }}/</label>
 							<input id="pages{{ $i }}" value="{{ $rule->page }}" name="form[{{ $loop->iteration }}][page]" type="text" class="block w-6/12 border border-gray-300 bg-gray-50 p-2.5 text-left text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500" />
-                            <button id="{{ $loop->iteration }}" onclick="event.preventDefault(); confirm('Are you sure you want to delete this entry?')" class="removeRow py-2.0 ml-2 w-full rounded-lg bg-red-700 px-4 text-center text-sm font-medium text-white sm:w-auto">X</button>
+                            <button id="{{ $loop->iteration }}" onclick="event.preventDefault(); confirm('Are you sure you want to delete this entry?')" class="removeRow py-2.0 ml-2 w-full rounded-lg bg-red-700 px-4 text-center text-sm font-medium text-white sm:w-auto">Delete</button>
                         </div>
                     </div>
 				</div>
