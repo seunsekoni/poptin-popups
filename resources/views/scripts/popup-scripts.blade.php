@@ -1,7 +1,7 @@
 <script>
     $(document).ready(function() {
         let i = "{!! $i ?? 0 !!}" ||  0;
-        document.getElementById("addRule").addEventListener("click", function() {
+        $(document).on('click', '#addRule', function ()  {
             i++;
             let html = `
             <div class="ruleRow mx-4 my-6 grid w-full grid-cols-7 bg-gray-100" id="row${i}">
@@ -37,8 +37,6 @@
         $(document).on('click', '.removeRow', function () {
             let buttonId = $(this).attr('id');
             $(`#row${buttonId}`).remove()
-            
-            // $(this).closest('.ruleRow').remove();
         });
     })
 </script>

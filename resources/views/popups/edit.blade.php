@@ -31,7 +31,7 @@
 			@php
 				$i++;
 			@endphp
-			<div class="ruleRow mx-4 my-6 grid w-full grid-cols-7 bg-gray-100" id="ruleRow{{ $i }}">
+			<div class="ruleRow mx-4 my-6 grid w-full grid-cols-7 bg-gray-100" id="row{{ $i }}">
 				<input type="hidden" name="form[{{ $i }}][id]" value="{{ $rule->id }}"/>
 				<div class="col-span-1 pr-4">
 					<select id="status" name="form[{{ $loop->iteration }}][status]" class="block w-full border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:text-blue-400 focus:ring-blue-500">
@@ -47,25 +47,15 @@
 					</select>
 				</div>
 				<div class="col-span-3">
-					<div>
-						<div class="flex">
+                    <div>
+                        <div class="flex">
 							<label for="pages{{ $i }}" class="mt-2 w-4/12 pr-3 text-right text-base font-medium text-gray-900">www.{{ $domain->top_level }}/</label>
 							<input id="pages{{ $i }}" value="{{ $rule->page }}" name="form[{{ $loop->iteration }}][page]" type="text" class="block w-6/12 border border-gray-300 bg-gray-50 p-2.5 text-left text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500" />
-
-							<div>
-								<button
-									type="button"
-									id="deleteRule{{ $i }}"
-									onclick="deleteRule({{ $i }}, '{{ route('popups.delete-rule', ['domain' => $domain, 'popup' => $popup, 'popupRule' => $rule]) }}')"
-									class="removeRow py-2.0 ml-2 w-full rounded-lg bg-red-700 px-4 text-center text-sm font-medium text-white sm:w-auto" 
-								>
-										Delete
-									</button>
-								<!-- </form> -->
-							</div>
-						</div>
-					</div>
+                            <button id="{{ $loop->iteration }}" onclick="event.preventDefault(); confirm('Are you sure you want to delete this entry?')" class="removeRow py-2.0 ml-2 w-full rounded-lg bg-red-700 px-4 text-center text-sm font-medium text-white sm:w-auto">X</button>
+                        </div>
+                    </div>
 				</div>
+				
 			</div>
 		@empty
 			
@@ -74,32 +64,6 @@
 	  <button onclick="event.preventDefault()" id="addRule" class=" ml-5 rounded bg-amber-700 hover:bg-blue-700 py-2 px-4 text-white"> Add Rule</button>
   	<button type="submit" class="ml-4 text-right rounded bg-blue-700 hover:bg-blue-700 py-2 px-4 text-white">Update</button>
 </form>
-
-<script>
-  $(document).ready(function() {
-    $.ajaxSetup({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      }
-    });
-  });
-
-  function deleteRule(id, url) {
-
-    if(confirm('Are you sure you want to delete this entry?')) {
-      $.ajax({
-        type: "DELETE",
-        url: url,
-        success: function(result) {
-          $(`#ruleRow${id}`).remove();
-        },
-		error: function(error) {
-			console.log(error)
-		}
-      });
-    }
-  }
-</script>
 
 @endsection
 

@@ -74,21 +74,29 @@ class PopupService implements ModelInterface
     public function update($popup, $request): Popup
     {
         $forms = $request['form'];
-        foreach ($forms as $req) {
-            if (array_key_exists('id', $req)) {
-                $popupRule = PopupRule::findOrFail($req['id']);
-                $popupRule->page = $req['page'];
-                $popupRule->rule = $req['rule'];
-                $popupRule->status = $req['status'];
-                $popupRule->save();
-            } else {
-                $popupRule = new PopupRule();
-                $popupRule->popup_id = $popup->id;
-                $popupRule->page = $req['page'];
-                $popupRule->rule = $req['rule'];
-                $popupRule->status = $req['status'];
-                $popupRule->save();
+        if ($forms) {
+            $idsToBeUpdated = [];
+            foreach ($forms as $req) {
+                if (array_key_exists('id', $req)) {
+                    array_push($idsToBeUpdated, $req['id']);
+                    $popupRule = PopupRule::findOrFail($req['id']);
+                    $popupRule->page = $req['page'];
+                    $popupRule->rule = $req['rule'];
+                    $popupRule->status = $req['status'];
+                    $popupRule->save();
+                } else {
+                    $popupRule = new PopupRule();
+                    $popupRule->popup_id = $popup->id;
+                    $popupRule->page = $req['page'];
+                    $popupRule->rule = $req['rule'];
+                    $popupRule->status = $req['status'];
+                    $popupRule->save();
+                    array_push($idsToBeUpdated, $popupRule->id);
+                }
             }
+            $popup->rules()->whereNotIn('id', $idsToBeUpdated)->delete();
+        } else {
+            $popup->rules()->delete();
         }
 
         return $popup;
