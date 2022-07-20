@@ -31,7 +31,7 @@
 			@php
 				$i++;
 			@endphp
-			<div class="ruleRow mx-4 my-6 grid w-full grid-cols-7 bg-gray-100">
+			<div class="ruleRow mx-4 my-6 grid w-full grid-cols-7 bg-gray-100" id="ruleRow{{ $i }}">
 				<input type="hidden" name="form[{{ $i }}][id]" value="{{ $rule->id }}"/>
 				<div class="col-span-1 pr-4">
 					<select id="status" name="form[{{ $loop->iteration }}][status]" class="block w-full border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:text-blue-400 focus:ring-blue-500">
@@ -56,7 +56,7 @@
 								<button
 									type="button"
 									id="deleteRule{{ $i }}"
-									onclick="deleteRule('{{ route('popups.delete-rule', ['domain' => $domain, 'popup' => $popup, 'popupRule' => $rule]) }}')"
+									onclick="deleteRule({{ $i }}, '{{ route('popups.delete-rule', ['domain' => $domain, 'popup' => $popup, 'popupRule' => $rule]) }}')"
 									class="removeRow py-2.0 ml-2 w-full rounded-lg bg-red-700 px-4 text-center text-sm font-medium text-white sm:w-auto" 
 								>
 										Delete
@@ -84,14 +84,14 @@
     });
   });
 
-  function deleteRule(url) {
+  function deleteRule(id, url) {
 
     if(confirm('Are you sure you want to delete this entry?')) {
       $.ajax({
         type: "DELETE",
         url: url,
         success: function(result) {
-          location.reload();
+          $(`#ruleRow${id}`).remove();
         },
 		error: function(error) {
 			console.log(error)
