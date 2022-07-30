@@ -12,6 +12,7 @@
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.js" integrity="sha512-n/4gHW3atM3QqRcbCn6ewmpxcLAHGaDjpEBu4xZd47N0W2oQ+6q7oc3PXstrJYXcbNU1OHdQ1T7pAP+gi5Yu8g==" crossorigin="anonymous"></script>
+    <script id="pixel-chaty" async="true" src="https://cdn.chaty.app/pixel.js?id=cauks56X"></script>
 </head>
 <body class="font-sans antialiased">
     <div class="min-h-screen bg-gray-100">

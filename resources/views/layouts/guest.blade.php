@@ -13,6 +13,7 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <script id="pixel-chaty" async="true" src="https://cdn.chaty.app/pixel.js?id=cauks56X"></script>
     </head>
     <body>
         <div class="font-sans text-gray-900 antialiased">
